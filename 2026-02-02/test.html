@@ -3,502 +3,860 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Spelling Test • 2026-02-02</title>
+  <title>Spelling Test</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Titan+One&display=swap" rel="stylesheet">
+  <!-- Kitimus preload (prevents flicker) -->
+  <link rel="preload" as="image" href="/mascots/kitimus/kitimus-neutral.png">
+  <link rel="preload" as="image" href="/mascots/kitimus/kitimus-squint.png">
+  <link rel="preload" as="image" href="/mascots/kitimus/kitimus-celebrate.png">
+  <link rel="preload" as="image" href="/mascots/kitimus/kitimus-blink.png">
+  <link rel="preload" as="image" href="/mascots/kitimus/kitimus-squint-left.png">
+  <link rel="preload" as="image" href="/mascots/kitimus/kitimus-squint-right.png">
 
   <script src="./data.js"></script>
 
   <style>
     :root{
-      --bg:#0b1220;
-      --card:#111a2e;
-      --text:#e9eefc;
-      --muted:#b9c3e6;
-      --accent:#2FAF9B;
-      --accent2:#2FA4E7;
-      --danger:#ff5a6a;
-      --ok:#35d07f;
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
-      --radius: 18px;
-    }
-    body{ margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background: var(--bg); color:var(--text); }
-    .wrap{ max-width: 980px; margin:0 auto; padding: 18px 16px 28px; }
-    .top{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin: 10px 0 16px; }
-    .brand{ font-family:"Titan One", system-ui, sans-serif; letter-spacing:.5px; font-size: 26px; }
-    .sub{ color:var(--muted); font-size: 14px; margin-top:4px; }
-    .panel{
-      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: var(--radius);
-      padding: 18px;
-      box-shadow: var(--shadow);
-    }
-    .tabs{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom: 12px; }
-    .tab{
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.15);
-      border-radius: 999px;
-      padding: 10px 14px;
-      font-weight: 900;
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
-      cursor:pointer;
-    }
-    .tab.active{ background: rgba(47,175,155,.22); border-color: rgba(47,175,155,.35); }
-    .card{
-      margin-top: 12px;
-      padding: 14px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: rgba(0,0,0,.16);
-    }
-    .qtext{ font-size: 18px; line-height: 1.4; }
-    .blank{
-      display:inline-block;
-      padding: 0 8px;
-      border-bottom: 2px solid rgba(255,255,255,.35);
-      font-weight: 1000;
-      letter-spacing: .5px;
-      min-width: 100px;
-      text-align:center;
-    }
-    .bank{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px; }
-    .pill{
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.15);
-      border-radius: 999px;
-      padding: 10px 12px;
-      font-weight: 900;
-      user-select:none;
-      cursor:pointer;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .pill.correct{ background: rgba(53,208,127,.18); border-color: rgba(53,208,127,.35); }
-    .pill.wrong{ background: rgba(255,90,106,.18); border-color: rgba(255,90,106,.35); }
+      --bg:#f4f6fb;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#475569;
+      --shadow:0 10px 30px rgba(15,23,42,.12);
+      --radius:18px;
+      --link:#1d4ed8;
 
-    .slots{ display:flex; gap:8px; flex-wrap:wrap; margin-top: 12px; }
-    .slot{
-      width: 34px; height: 42px;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.18);
-      display:flex; align-items:center; justify-content:center;
-      font-weight: 1000;
-      font-size: 18px;
+      --btn:#0f172a;
+      --btn2:#e5e7eb;
+      --btn2text:#111827;
+
+      --bar:#c7d2fe;
+      --barbg:#e5e7eb;
+
+      --good:#22c55e;
+      --bad:#ef4444;
+
+      /* responsive type */
+      --h1: clamp(26px, 5.6vw, 44px);
+      --h2: clamp(14px, 3.8vw, 18px);
+      --choice: clamp(16px, 4.2vw, 20px);
+      --pill: clamp(12px, 3.2vw, 14px);
+
+      --pad: 12px;
+      --gap: 10px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      overflow:auto;
+    }
+
+    header{
+      position:sticky;
+      top:0;
+      z-index:10;
+      padding:10px 14px;
+      background:#fff;
+      box-shadow:0 1px 10px rgba(0,0,0,.06);
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    header a{
+      text-decoration:none;
+      color:var(--link);
+      font-weight:900;
+      white-space:nowrap;
+    }
+    header h1{
+      margin:0;
+      font-size:16px;
+      font-weight:1000;
+      text-align:center;
+      flex:1;
+    }
+    header .spacer{ width:52px; }
+
+    main{
+      padding:12px;
+      display:flex;
+      justify-content:center;
+    }
+    .wrap{
+      width:100%;
+      max-width:720px;
+    }
+
+    .toprow{
+      position:relative;
+      display:grid;
+      grid-template-columns: auto 1fr auto;
+      align-items:center;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .pill{
+      background:#dbeafe;
+      color:#1e3a8a;
+      font-weight:1000;
+      border-radius:999px;
+      padding:8px 12px;
+      font-size:var(--pill);
+      min-width:92px;
+      text-align:center;
+      white-space:nowrap;
+    }
+    .barwrap{
+      flex:1;
+      height:18px;
+      background:var(--barbg);
+      border-radius:999px;
+      position:relative;
+      overflow:hidden;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.06);
+    }
+    .bar{
+      height:100%;
+      width:0%;
+      background:var(--bar);
+      border-radius:999px;
+      transition:width .25s ease;
+    }
+    .bartext{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:1000;
+      color:#111827;
+      font-size:14px;
+      text-shadow:0 1px 0 rgba(255,255,255,.75);
+      pointer-events:none;
+    }
+
+    /* Kitimus perch */
+    .kitimus{
+      justify-self:end;
+      align-self:center;
+      width: clamp(52px, 10vw, 76px);
+      height: clamp(52px, 10vw, 76px);
+      pointer-events:none;
       user-select:none;
+    }
+    .kitimus img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:block;
+    }
+
+    .card{
+      position:relative;
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:var(--pad);
+      display:flex;
+      flex-direction:column;
+      gap:var(--gap);
+      overflow:hidden;
+    }
+
+    /* Right-side ✓ / ✕ indicator */
+    .cornerMark{
+      position:absolute;
+      right:18px;
+      top:50%;
+      transform:translateY(-10%);
+      font-size:64px;
+      font-weight:1000;
+      line-height:1;
+      display:none;
+      user-select:none;
+      pointer-events:none;
+    }
+    .cornerMark.ok{ color: var(--good); display:block; }
+    .cornerMark.bad{ color: var(--bad); display:block; }
+
+    .qtitle{
+      font-size:var(--h1);
+      font-weight:1000;
+      line-height:1.05;
+      margin-top:2px;
+      word-break: break-word;
+    }
+    .qsub{
+      color:var(--muted);
+      font-weight:800;
+      margin-bottom:2px;
+      font-size:var(--h2);
+    }
+
+    /* MC answers */
+    .answers{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .choice{
+      border-radius:16px;
+      border:2px solid #e5e7eb;
+      background:#fff;
+      padding:14px 14px;
+      font-size:var(--choice);
+      font-weight:1000;
+      text-align:left;
+      cursor:pointer;
+      transition:transform .05s ease, border-color .1s ease, background .1s ease;
+    }
+    .choice:active{ transform:scale(.995); }
+    .choice.correct{
+      border-color:var(--good);
+      background:#ecfdf5;
+    }
+    .choice.wrong{
+      border-color:var(--bad);
+      background:#fef2f2;
+    }
+
+    /* Tiles */
+    .capWrap{
+      display:none;
+      flex-direction:column;
+      gap:12px;
+    }
+    .capWrap.show{ display:flex; }
+
+    .slots{
+      width:100%;
+      border-radius:16px;
+      background:#fff;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.06);
+      padding:14px 12px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+    }
+
+    /* SINGLE LINE ALWAYS: never wrap, allow horizontal scroll if needed */
+    .slotRow{
+      display:flex;
+      gap:8px;
+      justify-content:flex-start;
+      width:100%;
+      flex-wrap:nowrap;
+      overflow-x:auto;
+      overflow-y:hidden;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom:4px;
+    }
+    .slotRow::-webkit-scrollbar{ height:0; }
+
+    .slot{
+      min-width:0;
+      width:auto;
+      flex:0 0 auto;
+      text-align:center;
+      font-weight:1000;
+      font-size:18px;
+      line-height:1;
+      color:#111827;
+      user-select:none;
+
+      padding:0 2px 6px 2px;
+      border-bottom:4px solid #94a3b8;
+      min-height:28px;
+      letter-spacing:.5px;
+    }
+    .slot.empty{ color:transparent; }
+    .slot.space{
+      border-bottom:0;
+      width:14px;
+      padding:0;
+    }
+
+    .tileGrid{
+      width:100%;
+      display:grid;
+      grid-template-columns:repeat(6, minmax(0, 1fr));
+      gap:10px;
+      justify-content:center;
+      align-content:start;
+      padding:4px 2px;
     }
     .tile{
-      width: 34px; height: 42px;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      display:flex; align-items:center; justify-content:center;
-      font-weight: 1000;
-      font-size: 18px;
-      user-select:none;
+      border-radius:18px;
+      border:2px solid #e5e7eb;
+      background:#fff;
+      padding:14px 0;
+      font-size:22px;
+      font-weight:1000;
+      text-align:center;
       cursor:pointer;
-      -webkit-tap-highlight-color: transparent;
+      user-select:none;
+      transition:transform .05s ease, border-color .1s ease, background .1s ease;
     }
-    .tile.used{ opacity:.35; pointer-events:none; }
-    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top: 12px; }
+    .tile:active{ transform:scale(.99); }
+    .tile.used{
+      opacity:.35;
+      cursor:not-allowed;
+    }
+
+    /* Buttons */
+    .bottom{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
     .btn{
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.15);
-      border-radius: 14px;
-      padding: 10px 12px;
-      font-weight: 1000;
-      user-select:none;
+      flex:1;
+      min-width:140px;
+      padding:14px 14px;
+      border-radius:16px;
+      border:0;
+      font-size:16px;
+      font-weight:1000;
       cursor:pointer;
-      -webkit-tap-highlight-color: transparent;
+      background:var(--btn);
+      color:#fff;
+      box-shadow:0 10px 20px rgba(0,0,0,.10);
     }
-    .btn.ok{ background: rgba(47,175,155,.20); border-color: rgba(47,175,155,.35); }
-    .btn.bad{ background: rgba(255,90,106,.16); border-color: rgba(255,90,106,.30); }
-    .status{ color: var(--muted); font-size: 13px; }
-    .scoreline{ margin-top: 10px; font-weight: 900; }
-    .backlink{
-      color: var(--muted);
-      text-decoration:none;
-      border:1px solid rgba(255,255,255,.10);
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(0,0,0,.12);
-      user-select:none;
+    .btn.secondary{
+      background:var(--btn2);
+      color:var(--btn2text);
+      box-shadow:none;
+    }
+    .btn:disabled{
+      opacity:.45;
+      cursor:not-allowed;
+      box-shadow:none;
+    }
+    .btn.good{ background: var(--good) !important; color:#fff !important; }
+    .btn.bad{  background: var(--bad)  !important; color:#fff !important; }
+
+    /* Summary */
+    .review{
+      margin-top:6px;
+      padding:12px;
+      border-radius:16px;
+      background:#f8fafc;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.06);
+    }
+    .review h2{
+      margin:0 0 6px 0;
+      font-size:16px;
+      font-weight:1000;
+    }
+    .review ul{
+      margin:0;
+      padding-left:18px;
+      color:#111827;
+      font-weight:800;
+    }
+    .small{
+      font-size:13px;
+      color:var(--muted);
+      font-weight:800;
+      margin-top:8px;
+      line-height:1.35;
+    }
+
+    @media (max-height: 700px){
+      :root{ --pad: 10px; --gap: 8px; }
+      .choice{ padding:12px 12px; }
+      .tile{ padding:12px 0; font-size:20px; }
+      .btn{ padding:12px 14px; }
     }
   </style>
 </head>
+
 <body>
-  <div class="wrap">
-    <div class="top">
-      <div>
-        <div class="brand">Test</div>
-        <div class="sub" id="metaSub">Two modes</div>
+  <header>
+    <a href="./index.html">← Week</a>
+    <h1>Check Your Learning</h1>
+    <a href="/index.html" class="spacer" style="text-align:right;">KiTiMUS</a>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <div class="toprow">
+        <div class="pill" id="sectionPill">Spelling</div>
+        <div class="barwrap" aria-label="Progress">
+          <div class="bar" id="bar"></div>
+          <div class="bartext" id="barText">1 of 24</div>
+        </div>
+
+        <div class="kitimus" aria-hidden="true">
+          <img id="kitimusImg" src="/mascots/kitimus/kitimus-neutral.png" alt="">
+        </div>
       </div>
-      <a class="backlink" href="./index.html">Week menu</a>
+
+      <section class="card" id="card">
+        <div class="cornerMark" id="cornerMark" aria-hidden="true"></div>
+
+        <div class="qtitle" id="qtitle"></div>
+        <div class="qsub" id="qsub"></div>
+
+        <div class="answers" id="answers"></div>
+
+        <div class="capWrap" id="capWrap">
+          <div class="slots" id="slots"></div>
+          <div class="tileGrid" id="tileGrid"></div>
+        </div>
+
+        <div class="bottom" id="bottomBtns" style="display:none;">
+          <button class="btn secondary" id="backspaceBtn">Backspace</button>
+          <button class="btn secondary" id="clearBtn">Clear</button>
+          <button class="btn" id="checkBtn">Check</button>
+        </div>
+
+        <div id="reviewBox" style="display:none;"></div>
+      </section>
     </div>
-
-    <div class="panel">
-      <div class="tabs">
-        <div class="tab active" id="tabA">A: Sentence Bank</div>
-        <div class="tab" id="tabB">B: Spell Tiles</div>
-      </div>
-
-      <!-- Mode A -->
-      <div id="modeA">
-        <div class="status" id="aProgress"></div>
-        <div class="card">
-          <div class="qtext" id="aSentence"></div>
-          <div class="bank" id="aBank"></div>
-          <div class="scoreline" id="aScore"></div>
-        </div>
-        <div class="row">
-          <div class="btn" id="aPrev">Prev</div>
-          <div class="btn ok" id="aNext">Next</div>
-          <div class="btn" id="aRestart">Restart A</div>
-        </div>
-      </div>
-
-      <!-- Mode B -->
-      <div id="modeB" style="display:none;">
-        <div class="status" id="bProgress"></div>
-        <div class="card">
-          <div class="qtext" id="bPrompt"></div>
-          <div class="slots" id="bSlots"></div>
-          <div class="bank" id="bTiles"></div>
-          <div class="scoreline" id="bScore"></div>
-        </div>
-        <div class="row">
-          <div class="btn" id="bUndo">Undo</div>
-          <div class="btn" id="bReset">Reset</div>
-          <div class="btn ok" id="bCheck">Check</div>
-          <div class="btn ok" id="bNext">Next</div>
-        </div>
-      </div>
-    </div>
-  </div>
+  </main>
 
   <script>
     (function(){
       const W = window.SPELLING_WEEK;
-      if(!W || !Array.isArray(W.words)) {
-        document.getElementById("metaSub").textContent = "Missing data.js";
+      if(!W || !Array.isArray(W.words) || !W.words.length){
+        document.getElementById("qtitle").textContent = "Missing week data";
         return;
       }
-      document.getElementById("metaSub").textContent = W.label;
 
+      // ===== helpers =====
       function shuffle(arr){
         const a = arr.slice();
-        for (let i = a.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [a[i], a[j]] = [a[j], a[i]];
+        for(let i=a.length-1;i>0;i--){
+          const j = Math.floor(Math.random()*(i+1));
+          [a[i],a[j]]=[a[j],a[i]];
         }
         return a;
       }
 
       function pickDecoys(correctIdx, count){
         const pool = W.words.map((x, idx) => ({word:x.word, idx})).filter(x => x.idx !== correctIdx);
-        const s = shuffle(pool).slice(0, Math.min(count, pool.length));
-        return s.map(x => x.word);
+        return shuffle(pool).slice(0, Math.min(count, pool.length)).map(x => x.word);
       }
 
       function buildSentenceQuestion(idx){
         const item = W.words[idx];
         const sentence = item.sentence;
-        const blanked = sentence.replace(new RegExp("\\b" + item.word + "\\b", "i"), "_________");
-        const options = shuffle([item.word, ...pickDecoys(idx, 4)]);
-        return { blanked, correct: item.word, options };
+        const blanked = sentence.replace(new RegExp("\\b" + item.word + "\\b", "i"), "_____");
+        const choices = shuffle([item.word, ...pickDecoys(idx, 4)]);
+        return {
+          section: "Sentence",
+          type: "mc",
+          title: blanked,
+          subtitle: "Pick the correct word.",
+          correct: item.word,
+          choices,
+          reviewLabel: `Sentence: ${item.word}`,
+          answer: item.word
+        };
       }
 
-    // MODE A
-let aIdx = 0;
-let aCorrect = 0;
-let aTotal = W.words.length;
-
-// prevents double-scoring if a kid taps multiple times fast
-let aLocked = false;
-let aAdvanceTimer = null;
-
-function goToModeB(){
-  // Start Mode B fresh
-  bIdx = 0;
-  renderB();
-  setTab("B");
-}
-
-function advanceA(){
-  if (aAdvanceTimer) {
-    clearTimeout(aAdvanceTimer);
-    aAdvanceTimer = null;
-  }
-  aLocked = false;
-
-  // If we were on the last question, move to Mode B
-  if (aIdx >= aTotal - 1) {
-    goToModeB();
-    return;
-  }
-
-  aIdx++;
-  renderA();
-}
-
-function renderA(){
-  aLocked = false;
-  if (aAdvanceTimer) {
-    clearTimeout(aAdvanceTimer);
-    aAdvanceTimer = null;
-  }
-
-  const q = buildSentenceQuestion(aIdx);
-  document.getElementById("aProgress").textContent = `A: ${aIdx + 1} of ${aTotal}`;
-  document.getElementById("aSentence").innerHTML = q.blanked.replace("_________", '<span class="blank">_____</span>');
-
-  const bank = document.getElementById("aBank");
-  bank.innerHTML = "";
-
-  q.options.forEach(opt => {
-    const pill = document.createElement("div");
-    pill.className = "pill";
-    pill.textContent = opt;
-
-    pill.addEventListener("click", () => {
-      if (aLocked) return;
-      aLocked = true;
-
-      // lock after selection
-      [...bank.children].forEach(el => el.style.pointerEvents = "none");
-
-      if(opt === q.correct){
-        pill.classList.add("correct");
-        aCorrect++;
-      } else {
-        pill.classList.add("wrong");
-        // show the correct one
-        [...bank.children].forEach(el => {
-          if(el.textContent === q.correct) el.classList.add("correct");
-        });
+      // Tiles engine (single word, no sentence shown here)
+      function buildTileQuestion(idx){
+        const item = W.words[idx];
+        return {
+          section: "Spelling",
+          type: "tiles",
+          title: "Spell the word",
+          subtitle: `Definition: ${item.definition}`,
+          correct: item.word,
+          reviewLabel: `Spelling: ${item.word}`,
+          answer: item.word
+        };
       }
 
-      document.getElementById("aScore").textContent = `Score: ${aCorrect} / ${aTotal}`;
+      const QUESTIONS = [
+        ...W.words.map((_, i) => buildSentenceQuestion(i)),
+        ...W.words.map((_, i) => buildTileQuestion(i))
+      ];
 
-      // auto-advance after a short delay
-      aAdvanceTimer = setTimeout(() => {
-        advanceA();
-      }, 600);
-    });
+      // ===== UI hooks =====
+      const sectionPill = document.getElementById("sectionPill");
+      const bar = document.getElementById("bar");
+      const barText = document.getElementById("barText");
 
-    bank.appendChild(pill);
-  });
+      const qtitle = document.getElementById("qtitle");
+      const qsub = document.getElementById("qsub");
 
-  document.getElementById("aScore").textContent = `Score: ${aCorrect} / ${aTotal}`;
-}
+      const answersEl = document.getElementById("answers");
+      const capWrap = document.getElementById("capWrap");
+      const slotsEl = document.getElementById("slots");
+      const tileGrid = document.getElementById("tileGrid");
 
-document.getElementById("aPrev").addEventListener("click", () => {
-  if (aAdvanceTimer) {
-    clearTimeout(aAdvanceTimer);
-    aAdvanceTimer = null;
-  }
-  aLocked = false;
-  aIdx = Math.max(0, aIdx - 1);
-  renderA();
-});
+      const reviewBox = document.getElementById("reviewBox");
+      const cornerMark = document.getElementById("cornerMark");
 
-document.getElementById("aNext").addEventListener("click", () => {
-  // Keep Next for adults debugging, but make it smart
-  if (aAdvanceTimer) {
-    clearTimeout(aAdvanceTimer);
-    aAdvanceTimer = null;
-  }
-  aLocked = false;
+      const bottomBtns = document.getElementById("bottomBtns");
+      const backspaceBtn = document.getElementById("backspaceBtn");
+      const clearBtn = document.getElementById("clearBtn");
+      const checkBtn = document.getElementById("checkBtn");
 
-  if (aIdx >= aTotal - 1) {
-    goToModeB();
-    return;
-  }
+      // ===== Kitimus =====
+      const kitimusImg = document.getElementById("kitimusImg");
+      const KITIMUS = {
+        neutral: "/mascots/kitimus/kitimus-neutral.png",
+        squint: "/mascots/kitimus/kitimus-squint.png",
+        squintLeft: "/mascots/kitimus/kitimus-squint-left.png",
+        squintRight: "/mascots/kitimus/kitimus-squint-right.png",
+        blink: "/mascots/kitimus/kitimus-blink.png",
+        celebrate: "/mascots/kitimus/kitimus-celebrate.png"
+      };
 
-  aIdx++;
-  renderA();
-});
-
-document.getElementById("aRestart").addEventListener("click", () => {
-  if (aAdvanceTimer) {
-    clearTimeout(aAdvanceTimer);
-    aAdvanceTimer = null;
-  }
-  aLocked = false;
-  aIdx = 0;
-  aCorrect = 0;
-  renderA();
-});
-
-      // MODE B
-      let bIdx = 0;
-      let bCorrect = 0;
-      let placed = [];        // {ch, tileId}
-      let tiles = [];         // {id, ch, used}
-
-      function lettersOf(word){
-        return word.split("");
-      }
-
-      function buildTileTray(word){
-        const correctLetters = lettersOf(word);
-        let tray = correctLetters.slice();
-
-        // Decoys:
-        // 1) add extra duplicates of common double letters
-        const doubles = ["r","l","p","c","t"];
-        const lower = word.toLowerCase();
-        doubles.forEach(d => {
-          if(lower.includes(d)) tray.push(d);
-        });
-
-        // 2) add letters from other words in this unit
-        const otherLetters = shuffle(
-          W.words.map(w => w.word.toLowerCase()).join("").split("")
-        ).slice(0, 6);
-        tray = tray.concat(otherLetters);
-
-        // 3) keep tray reasonable
-        tray = shuffle(tray).slice(0, Math.max(correctLetters.length + 6, 18));
-
-        // normalize and id
-        tiles = tray.map((ch, i) => ({ id: "t" + i, ch: ch.toUpperCase(), used:false }));
-      }
-
-      function renderB(){
-        const item = W.words[bIdx];
-        document.getElementById("bProgress").textContent = `B: ${bIdx + 1} of ${W.words.length}`;
-        document.getElementById("bPrompt").innerHTML =
-          `<div><span style="color:var(--muted); font-weight:900;">Definition:</span> ${item.definition}</div>
-           <div style="margin-top:8px; color:var(--muted); font-size:14px;">${item.sentence}</div>`;
-
-        placed = [];
-        buildTileTray(item.word);
-
-        drawSlots(item.word);
-        drawTiles();
-        document.getElementById("bScore").textContent = `Score: ${bCorrect} / ${W.words.length}`;
-      }
-
-      function drawSlots(word){
-        const slots = document.getElementById("bSlots");
-        slots.innerHTML = "";
-        for(let i=0; i<word.length; i++){
-          const s = document.createElement("div");
-          s.className = "slot";
-          s.textContent = "";
-          s.dataset.pos = String(i);
-          s.addEventListener("click", () => {
-            // remove from this slot if filled
-            const pos = Number(s.dataset.pos);
-            const entry = placed[pos];
-            if(entry){
-              placed[pos] = null;
-              const t = tiles.find(x => x.id === entry.tileId);
-              if(t) t.used = false;
-              s.textContent = "";
-              drawTiles();
-            }
-          });
-          slots.appendChild(s);
+      function setKitimus(state){
+        if(!kitimusImg) return;
+        const src = KITIMUS[state] || KITIMUS.neutral;
+        if(kitimusImg.getAttribute("src") !== src){
+          kitimusImg.setAttribute("src", src);
         }
-        placed = new Array(word.length).fill(null);
       }
 
-      function drawTiles(){
-        const tray = document.getElementById("bTiles");
-        tray.innerHTML = "";
-        tiles.forEach(t => {
-          const el = document.createElement("div");
-          el.className = "tile" + (t.used ? " used" : "");
-          el.textContent = t.ch;
-          el.dataset.id = t.id;
-          el.addEventListener("click", () => {
-            if(t.used) return;
-            const nextPos = placed.findIndex(x => x === null);
-            if(nextPos === -1) return;
-            placed[nextPos] = { ch: t.ch, tileId: t.id };
-            t.used = true;
-            // write into slot
-            const slotEl = document.querySelector(`.slot[data-pos="${nextPos}"]`);
-            if(slotEl) slotEl.textContent = t.ch;
-            drawTiles();
-          });
-          tray.appendChild(el);
-        });
+      let kitimusIdleTimer = null;
+      function stopKitimusIdle(){
+        if(kitimusIdleTimer){
+          clearInterval(kitimusIdleTimer);
+          kitimusIdleTimer = null;
+        }
       }
+      function startKitimusIdle(){
+        stopKitimusIdle();
+        setKitimus("squint");
+        kitimusIdleTimer = setInterval(() => {
+          if(locked) return;
+          const r = Math.random();
 
-      document.getElementById("bUndo").addEventListener("click", () => {
-        // remove last filled slot
-        for(let i=placed.length-1; i>=0; i--){
-          if(placed[i]){
-            const entry = placed[i];
-            placed[i] = null;
-            const t = tiles.find(x => x.id === entry.tileId);
-            if(t) t.used = false;
-            const slotEl = document.querySelector(`.slot[data-pos="${i}"]`);
-            if(slotEl) slotEl.textContent = "";
-            drawTiles();
-            break;
+          if(r < 0.22){
+            setKitimus("blink");
+            setTimeout(() => setKitimus("squint"), 140);
+            return;
           }
+          if(r < 0.55){
+            const dir = (Math.random() < 0.5) ? "squintLeft" : "squintRight";
+            setKitimus(dir);
+            setTimeout(() => setKitimus("squint"), 220);
+            return;
+          }
+          setKitimus("squint");
+        }, 2200);
+      }
+
+      function kitimusWrongPulse(){
+        setTimeout(() => setKitimus("neutral"), 150);
+        setTimeout(() => setKitimus("squint"), 650);
+      }
+
+      // ===== State =====
+      let idx = 0;
+      let locked = false;
+      const results = [];
+      const missed = []; // store objects so summary can show correct answers
+
+      function setProgress(){
+        const n = QUESTIONS.length;
+        const pos = idx + 1;
+        const pct = Math.round((pos / n) * 100);
+        bar.style.width = pct + "%";
+        barText.textContent = `${pos} of ${n}`;
+        sectionPill.textContent = "Spelling";
+      }
+
+      function resetCommonUI(q){
+        locked = false;
+        reviewBox.style.display = "none";
+        reviewBox.innerHTML = "";
+
+        setKitimus("squint");
+
+        qtitle.textContent = q.title;
+        qsub.textContent = q.subtitle;
+
+        answersEl.style.display = "none";
+        answersEl.innerHTML = "";
+
+        capWrap.classList.remove("show");
+        slotsEl.innerHTML = "";
+        tileGrid.innerHTML = "";
+
+        bottomBtns.style.display = "none";
+        checkBtn.classList.remove("good","bad");
+        checkBtn.disabled = false;
+        checkBtn.textContent = "Check";
+
+        cornerMark.style.display = "none";
+        cornerMark.classList.remove("ok","bad");
+        cornerMark.textContent = "";
+      }
+
+      // ===== MC =====
+      function renderMC(q){
+        answersEl.style.display = "flex";
+
+        q.choices.forEach(choice => {
+          const b = document.createElement("button");
+          b.className = "choice";
+          b.type = "button";
+          b.textContent = choice;
+
+          b.addEventListener("click", () => {
+            if(locked) return;
+            locked = true;
+
+            const ok = (choice === q.correct);
+
+            const btns = Array.from(answersEl.querySelectorAll(".choice"));
+            btns.forEach(x => {
+              if(x.textContent === q.correct) x.classList.add("correct");
+              else if(x.textContent === choice) x.classList.add("wrong");
+              x.disabled = true;
+            });
+
+            results.push({ q, ok });
+
+            if(!ok){
+              missed.push({ label: q.reviewLabel, correct: q.answer });
+              kitimusWrongPulse();
+            }
+
+            setTimeout(() => advance(), 600);
+          });
+
+          answersEl.appendChild(b);
+        });
+      }
+
+      // ===== Tiles =====
+      function buildTileState(word){
+        const letters = word.toUpperCase().split("");
+        const tiles = shuffle(letters.map((ch, i) => ({ ch, id: i })));
+
+        // decoys: add duplicates and some letters from other words
+        const doubles = ["R","L","P","C","T"];
+        const wordUpper = word.toUpperCase();
+        doubles.forEach(d => { if(wordUpper.includes(d)) tiles.push({ ch:d, id: "d"+d+Math.random() }); });
+
+        const otherPool = shuffle(W.words.map(w => w.word.toUpperCase()).join("").split("")).slice(0, 6);
+        otherPool.forEach(ch => tiles.push({ ch, id: "o"+ch+Math.random() }));
+
+        const mixed = shuffle(tiles);
+
+        return {
+          targetLetters: letters,
+          filled: new Array(letters.length).fill(""),
+          filledTileIndex: new Array(letters.length).fill(-1),
+          tiles: mixed,
+          used: new Array(mixed.length).fill(false)
+        };
+      }
+
+      let tileState = null;
+
+      function renderSlots(ts){
+        slotsEl.innerHTML = "";
+        const row = document.createElement("div");
+        row.className = "slotRow";
+
+        for(let i=0;i<ts.targetLetters.length;i++){
+          const slot = document.createElement("div");
+          slot.className = "slot";
+          const v = ts.filled[i] || "";
+          if(!v) slot.classList.add("empty");
+          slot.textContent = v || "·";
+          row.appendChild(slot);
         }
-      });
 
-      document.getElementById("bReset").addEventListener("click", () => {
-        renderB();
-      });
+        slotsEl.appendChild(row);
+      }
 
-      document.getElementById("bCheck").addEventListener("click", () => {
-        const answer = placed.map(x => x ? x.ch : "").join("").toLowerCase();
-        const correct = W.words[bIdx].word.toLowerCase();
+      function renderTiles(ts){
+        tileGrid.innerHTML = "";
+        ts.tiles.forEach((t, index) => {
+          const b = document.createElement("button");
+          b.className = "tile";
+          b.type = "button";
+          b.textContent = t.ch;
 
-        if(answer.length !== correct.length || answer.includes("")){
-          document.getElementById("bScore").textContent = `Fill all letters first. Score: ${bCorrect} / ${W.words.length}`;
+          if(ts.used[index]){
+            b.classList.add("used");
+            b.disabled = true;
+          }
+
+          b.addEventListener("click", () => {
+            if(locked) return;
+            if(ts.used[index]) return;
+
+            const next = ts.filled.findIndex(x => x === "");
+            if(next === -1) return;
+
+            ts.filled[next] = t.ch;
+            ts.filledTileIndex[next] = index;
+            ts.used[index] = true;
+
+            renderSlots(ts);
+            renderTiles(ts);
+          });
+
+          tileGrid.appendChild(b);
+        });
+      }
+
+      function renderTilesQuestion(q){
+        capWrap.classList.add("show");
+        bottomBtns.style.display = "flex";
+
+        tileState = buildTileState(q.correct);
+        renderSlots(tileState);
+        renderTiles(tileState);
+
+        clearBtn.onclick = () => {
+          if(locked) return;
+          tileState = buildTileState(q.correct);
+          renderSlots(tileState);
+          renderTiles(tileState);
+        };
+
+        backspaceBtn.onclick = () => {
+          if(locked) return;
+
+          let last = -1;
+          for(let i = tileState.filled.length - 1; i >= 0; i--){
+            if(tileState.filled[i] !== ""){ last = i; break; }
+          }
+          if(last === -1) return;
+
+          const tileIdx = tileState.filledTileIndex[last];
+          tileState.filled[last] = "";
+          tileState.filledTileIndex[last] = -1;
+
+          if(tileIdx !== -1) tileState.used[tileIdx] = false;
+
+          renderSlots(tileState);
+          renderTiles(tileState);
+        };
+
+        checkBtn.onclick = () => {
+          if(locked) return;
+          locked = true;
+
+          const attempt = tileState.filled.join("");
+          const target = tileState.targetLetters.join("");
+          const ok = (attempt === target);
+
+          checkBtn.classList.remove("good","bad");
+          checkBtn.classList.add(ok ? "good" : "bad");
+          checkBtn.disabled = true;
+
+          results.push({ q, ok });
+
+          if(!ok){
+            missed.push({ label: q.reviewLabel, correct: q.answer });
+            kitimusWrongPulse();
+          }
+
+          setTimeout(() => advance(), 650);
+        };
+      }
+
+      const RENDERERS = { mc: renderMC, tiles: renderTilesQuestion };
+
+      function showCorner(mode){
+        if(mode === "hide"){
+          cornerMark.style.display = "none";
           return;
         }
+        cornerMark.style.display = "block";
+        cornerMark.textContent = (mode === "ok") ? "✓" : "✕";
+        cornerMark.classList.toggle("ok", mode === "ok");
+        cornerMark.classList.toggle("bad", mode === "bad");
+      }
 
-        if(answer === correct){
-          bCorrect++;
-          document.getElementById("bScore").textContent = `Correct. Score: ${bCorrect} / ${W.words.length}`;
-        } else {
-          document.getElementById("bScore").textContent = `Not quite. Score: ${bCorrect} / ${W.words.length}`;
+      function renderQuestion(){
+        const q = QUESTIONS[idx];
+        setProgress();
+        resetCommonUI(q);
+        startKitimusIdle();
+        RENDERERS[q.type](q);
+      }
+
+      function advance(){
+        if(idx === QUESTIONS.length - 1){
+          showSummary();
+          stopKitimusIdle();
+          return;
         }
-      });
+        idx++;
+        renderQuestion();
+      }
 
-      document.getElementById("bNext").addEventListener("click", () => {
-        bIdx = (bIdx + 1) % W.words.length;
-        renderB();
-      });
+      function showSummary(){
+        const total = results.length;
+        const correct = results.filter(r => r.ok).length;
+        const pct = total ? Math.round((correct / total) * 100) : 0;
 
-      // Tabs
-      function setTab(which){
-        const tabA = document.getElementById("tabA");
-        const tabB = document.getElementById("tabB");
-        const modeA = document.getElementById("modeA");
-        const modeB = document.getElementById("modeB");
+        stopKitimusIdle();
 
-        if(which === "A"){
-          tabA.classList.add("active");
-          tabB.classList.remove("active");
-          modeA.style.display = "";
-          modeB.style.display = "none";
+        answersEl.style.display = "none";
+        capWrap.classList.remove("show");
+        bottomBtns.style.display = "none";
+
+        qtitle.textContent = `Score: ${pct}%`;
+
+        let message = "";
+        if(pct === 100){
+          message = `Perfect score! You got all ${total} correct.`;
+        } else if(pct >= 80){
+          message = `Nice work! You got ${correct} out of ${total} correct.`;
         } else {
-          tabB.classList.add("active");
-          tabA.classList.remove("active");
-          modeB.style.display = "";
-          modeA.style.display = "none";
+          message = `Keep practicing. You got ${correct} out of ${total} correct.`;
+        }
+        qsub.textContent = message;
+
+        const misses = missed.slice();
+        const tip = (pct === 100)
+          ? "Perfect score. Do a quick study run later to lock it in."
+          : "Tip: Study the ones you missed, then try again to beat your score.";
+
+        reviewBox.style.display = "block";
+        reviewBox.innerHTML = `
+          <div class="review">
+            <h2>${misses.length ? "Review these:" : "Nothing to review. Nice work!"}</h2>
+            ${misses.length ? `<ul>${misses.map(m => `<li>${m.label} (answer: ${m.correct})</li>`).join("")}</ul>` : ""}
+            <div class="small">${tip}</div>
+          </div>
+        `;
+
+        bar.style.width = "100%";
+        barText.textContent = `${total} of ${total}`;
+
+        if(pct === 100){
+          setTimeout(() => setKitimus("celebrate"), 200);
+          showCorner("ok");
+        } else if(pct >= 80){
+          setKitimus("squint");
+          showCorner("ok");
+        } else {
+          setKitimus("neutral");
+          showCorner("bad");
         }
       }
 
-      document.getElementById("tabA").addEventListener("click", () => setTab("A"));
-      document.getElementById("tabB").addEventListener("click", () => setTab("B"));
+      document.addEventListener("pointerdown", () => {
+        if(locked) return;
+        setKitimus("blink");
+        setTimeout(() => setKitimus("squint"), 120);
+      }, { passive:true });
 
-      // Init
-      renderA();
-      renderB();
+      renderQuestion();
     })();
   </script>
 </body>
