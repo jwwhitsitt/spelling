@@ -1,7 +1,7 @@
 // kitimus/spelling/2026-02-02/data.js
 window.SPELLING_WEEK = {
   key: "2026-02-02",
-  label: "Spelling • Feb 2",
+  label: "Spelling • Feb 2, 2026",
   words: [
     {
       word: "irreplaceable",
@@ -10,7 +10,7 @@ window.SPELLING_WEEK = {
     },
     {
       word: "interaction",
-      definition: "When people or things act on or talk to each other.",
+      definition: "When people or things talk to or act with each other.",
       sentence: "The teacher watched our interaction during group work."
     },
     {
@@ -26,7 +26,7 @@ window.SPELLING_WEEK = {
     {
       word: "illegible",
       definition: "Too messy or unclear to read.",
-      sentence: "My homework was illegible, so the teacher asked me to rewrite it."
+      sentence: "My handwriting was illegible, so the teacher asked me to rewrite it."
     },
     {
       word: "illogical",
@@ -61,7 +61,7 @@ window.SPELLING_WEEK = {
     {
       word: "irresponsible",
       definition: "Not careful or not doing what you should do.",
-      sentence: "It is irresponsible to leave a candle burning and walk away."
+      sentence: "It is irresponsible to leave food out where bugs can get it."
     }
   ]
 };
