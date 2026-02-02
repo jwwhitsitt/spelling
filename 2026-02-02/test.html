@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Spelling Test • 2026-02-02</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Titan+One&display=swap" rel="stylesheet">
+
+  <script src="./data.js"></script>
+
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#111a2e;
+      --text:#e9eefc;
+      --muted:#b9c3e6;
+      --accent:#2FAF9B;
+      --accent2:#2FA4E7;
+      --danger:#ff5a6a;
+      --ok:#35d07f;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+    body{ margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background: var(--bg); color:var(--text); }
+    .wrap{ max-width: 980px; margin:0 auto; padding: 18px 16px 28px; }
+    .top{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin: 10px 0 16px; }
+    .brand{ font-family:"Titan One", system-ui, sans-serif; letter-spacing:.5px; font-size: 26px; }
+    .sub{ color:var(--muted); font-size: 14px; margin-top:4px; }
+    .panel{
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+    .tabs{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom: 12px; }
+    .tab{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.15);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-weight: 900;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+      cursor:pointer;
+    }
+    .tab.active{ background: rgba(47,175,155,.22); border-color: rgba(47,175,155,.35); }
+    .card{
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.16);
+    }
+    .qtext{ font-size: 18px; line-height: 1.4; }
+    .blank{
+      display:inline-block;
+      padding: 0 8px;
+      border-bottom: 2px solid rgba(255,255,255,.35);
+      font-weight: 1000;
+      letter-spacing: .5px;
+      min-width: 100px;
+      text-align:center;
+    }
+    .bank{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px; }
+    .pill{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.15);
+      border-radius: 999px;
+      padding: 10px 12px;
+      font-weight: 900;
+      user-select:none;
+      cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .pill.correct{ background: rgba(53,208,127,.18); border-color: rgba(53,208,127,.35); }
+    .pill.wrong{ background: rgba(255,90,106,.18); border-color: rgba(255,90,106,.35); }
+
+    .slots{ display:flex; gap:8px; flex-wrap:wrap; margin-top: 12px; }
+    .slot{
+      width: 34px; height: 42px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      display:flex; align-items:center; justify-content:center;
+      font-weight: 1000;
+      font-size: 18px;
+      user-select:none;
+    }
+    .tile{
+      width: 34px; height: 42px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      display:flex; align-items:center; justify-content:center;
+      font-weight: 1000;
+      font-size: 18px;
+      user-select:none;
+      cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tile.used{ opacity:.35; pointer-events:none; }
+    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top: 12px; }
+    .btn{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.15);
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-weight: 1000;
+      user-select:none;
+      cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn.ok{ background: rgba(47,175,155,.20); border-color: rgba(47,175,155,.35); }
+    .btn.bad{ background: rgba(255,90,106,.16); border-color: rgba(255,90,106,.30); }
+    .status{ color: var(--muted); font-size: 13px; }
+    .scoreline{ margin-top: 10px; font-weight: 900; }
+    .backlink{
+      color: var(--muted);
+      text-decoration:none;
+      border:1px solid rgba(255,255,255,.10);
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.12);
+      user-select:none;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <div class="brand">Test</div>
+        <div class="sub" id="metaSub">Two modes</div>
+      </div>
+      <a class="backlink" href="./index.html">Week menu</a>
+    </div>
+
+    <div class="panel">
+      <div class="tabs">
+        <div class="tab active" id="tabA">A: Sentence Bank</div>
+        <div class="tab" id="tabB">B: Spell Tiles</div>
+      </div>
+
+      <!-- Mode A -->
+      <div id="modeA">
+        <div class="status" id="aProgress"></div>
+        <div class="card">
+          <div class="qtext" id="aSentence"></div>
+          <div class="bank" id="aBank"></div>
+          <div class="scoreline" id="aScore"></div>
+        </div>
+        <div class="row">
+          <div class="btn" id="aPrev">Prev</div>
+          <div class="btn ok" id="aNext">Next</div>
+          <div class="btn" id="aRestart">Restart A</div>
+        </div>
+      </div>
+
+      <!-- Mode B -->
+      <div id="modeB" style="display:none;">
+        <div class="status" id="bProgress"></div>
+        <div class="card">
+          <div class="qtext" id="bPrompt"></div>
+          <div class="slots" id="bSlots"></div>
+          <div class="bank" id="bTiles"></div>
+          <div class="scoreline" id="bScore"></div>
+        </div>
+        <div class="row">
+          <div class="btn" id="bUndo">Undo</div>
+          <div class="btn" id="bReset">Reset</div>
+          <div class="btn ok" id="bCheck">Check</div>
+          <div class="btn ok" id="bNext">Next</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const W = window.SPELLING_WEEK;
+      if(!W || !Array.isArray(W.words)) {
+        document.getElementById("metaSub").textContent = "Missing data.js";
+        return;
+      }
+      document.getElementById("metaSub").textContent = W.label;
+
+      function shuffle(arr){
+        const a = arr.slice();
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+      }
+
+      function pickDecoys(correctIdx, count){
+        const pool = W.words.map((x, idx) => ({word:x.word, idx})).filter(x => x.idx !== correctIdx);
+        const s = shuffle(pool).slice(0, Math.min(count, pool.length));
+        return s.map(x => x.word);
+      }
+
+      function buildSentenceQuestion(idx){
+        const item = W.words[idx];
+        const sentence = item.sentence;
+        const blanked = sentence.replace(new RegExp("\\b" + item.word + "\\b", "i"), "_________");
+        const options = shuffle([item.word, ...pickDecoys(idx, 4)]);
+        return { blanked, correct: item.word, options };
+      }
+
+      // MODE A
+      let aIdx = 0;
+      let aCorrect = 0;
+      let aTotal = W.words.length;
+
+      function renderA(){
+        const q = buildSentenceQuestion(aIdx);
+        document.getElementById("aProgress").textContent = `A: ${aIdx + 1} of ${aTotal}`;
+        document.getElementById("aSentence").innerHTML = q.blanked.replace("_________", '<span class="blank">_____</span>');
+
+        const bank = document.getElementById("aBank");
+        bank.innerHTML = "";
+        q.options.forEach(opt => {
+          const pill = document.createElement("div");
+          pill.className = "pill";
+          pill.textContent = opt;
+          pill.addEventListener("click", () => {
+            // lock after selection
+            [...bank.children].forEach(el => el.style.pointerEvents = "none");
+            if(opt === q.correct){
+              pill.classList.add("correct");
+              aCorrect++;
+            } else {
+              pill.classList.add("wrong");
+              // show the correct one
+              [...bank.children].forEach(el => {
+                if(el.textContent === q.correct) el.classList.add("correct");
+              });
+            }
+            document.getElementById("aScore").textContent = `Score: ${aCorrect} / ${aTotal}`;
+          });
+          bank.appendChild(pill);
+        });
+
+        document.getElementById("aScore").textContent = `Score: ${aCorrect} / ${aTotal}`;
+      }
+
+      document.getElementById("aPrev").addEventListener("click", () => {
+        aIdx = Math.max(0, aIdx - 1);
+        renderA();
+      });
+      document.getElementById("aNext").addEventListener("click", () => {
+        aIdx = Math.min(aTotal - 1, aIdx + 1);
+        renderA();
+      });
+      document.getElementById("aRestart").addEventListener("click", () => {
+        aIdx = 0;
+        aCorrect = 0;
+        renderA();
+      });
+
+      // MODE B
+      let bIdx = 0;
+      let bCorrect = 0;
+      let placed = [];        // {ch, tileId}
+      let tiles = [];         // {id, ch, used}
+
+      function lettersOf(word){
+        return word.split("");
+      }
+
+      function buildTileTray(word){
+        const correctLetters = lettersOf(word);
+        let tray = correctLetters.slice();
+
+        // Decoys:
+        // 1) add extra duplicates of common double letters
+        const doubles = ["r","l","p","c","t"];
+        const lower = word.toLowerCase();
+        doubles.forEach(d => {
+          if(lower.includes(d)) tray.push(d);
+        });
+
+        // 2) add letters from other words in this unit
+        const otherLetters = shuffle(
+          W.words.map(w => w.word.toLowerCase()).join("").split("")
+        ).slice(0, 6);
+        tray = tray.concat(otherLetters);
+
+        // 3) keep tray reasonable
+        tray = shuffle(tray).slice(0, Math.max(correctLetters.length + 6, 18));
+
+        // normalize and id
+        tiles = tray.map((ch, i) => ({ id: "t" + i, ch: ch.toUpperCase(), used:false }));
+      }
+
+      function renderB(){
+        const item = W.words[bIdx];
+        document.getElementById("bProgress").textContent = `B: ${bIdx + 1} of ${W.words.length}`;
+        document.getElementById("bPrompt").innerHTML =
+          `<div><span style="color:var(--muted); font-weight:900;">Definition:</span> ${item.definition}</div>
+           <div style="margin-top:8px; color:var(--muted); font-size:14px;">${item.sentence}</div>`;
+
+        placed = [];
+        buildTileTray(item.word);
+
+        drawSlots(item.word);
+        drawTiles();
+        document.getElementById("bScore").textContent = `Score: ${bCorrect} / ${W.words.length}`;
+      }
+
+      function drawSlots(word){
+        const slots = document.getElementById("bSlots");
+        slots.innerHTML = "";
+        for(let i=0; i<word.length; i++){
+          const s = document.createElement("div");
+          s.className = "slot";
+          s.textContent = "";
+          s.dataset.pos = String(i);
+          s.addEventListener("click", () => {
+            // remove from this slot if filled
+            const pos = Number(s.dataset.pos);
+            const entry = placed[pos];
+            if(entry){
+              placed[pos] = null;
+              const t = tiles.find(x => x.id === entry.tileId);
+              if(t) t.used = false;
+              s.textContent = "";
+              drawTiles();
+            }
+          });
+          slots.appendChild(s);
+        }
+        placed = new Array(word.length).fill(null);
+      }
+
+      function drawTiles(){
+        const tray = document.getElementById("bTiles");
+        tray.innerHTML = "";
+        tiles.forEach(t => {
+          const el = document.createElement("div");
+          el.className = "tile" + (t.used ? " used" : "");
+          el.textContent = t.ch;
+          el.dataset.id = t.id;
+          el.addEventListener("click", () => {
+            if(t.used) return;
+            const nextPos = placed.findIndex(x => x === null);
+            if(nextPos === -1) return;
+            placed[nextPos] = { ch: t.ch, tileId: t.id };
+            t.used = true;
+            // write into slot
+            const slotEl = document.querySelector(`.slot[data-pos="${nextPos}"]`);
+            if(slotEl) slotEl.textContent = t.ch;
+            drawTiles();
+          });
+          tray.appendChild(el);
+        });
+      }
+
+      document.getElementById("bUndo").addEventListener("click", () => {
+        // remove last filled slot
+        for(let i=placed.length-1; i>=0; i--){
+          if(placed[i]){
+            const entry = placed[i];
+            placed[i] = null;
+            const t = tiles.find(x => x.id === entry.tileId);
+            if(t) t.used = false;
+            const slotEl = document.querySelector(`.slot[data-pos="${i}"]`);
+            if(slotEl) slotEl.textContent = "";
+            drawTiles();
+            break;
+          }
+        }
+      });
+
+      document.getElementById("bReset").addEventListener("click", () => {
+        renderB();
+      });
+
+      document.getElementById("bCheck").addEventListener("click", () => {
+        const answer = placed.map(x => x ? x.ch : "").join("").toLowerCase();
+        const correct = W.words[bIdx].word.toLowerCase();
+
+        if(answer.length !== correct.length || answer.includes("")){
+          document.getElementById("bScore").textContent = `Fill all letters first. Score: ${bCorrect} / ${W.words.length}`;
+          return;
+        }
+
+        if(answer === correct){
+          bCorrect++;
+          document.getElementById("bScore").textContent = `Correct. Score: ${bCorrect} / ${W.words.length}`;
+        } else {
+          document.getElementById("bScore").textContent = `Not quite. Score: ${bCorrect} / ${W.words.length}`;
+        }
+      });
+
+      document.getElementById("bNext").addEventListener("click", () => {
+        bIdx = (bIdx + 1) % W.words.length;
+        renderB();
+      });
+
+      // Tabs
+      function setTab(which){
+        const tabA = document.getElementById("tabA");
+        const tabB = document.getElementById("tabB");
+        const modeA = document.getElementById("modeA");
+        const modeB = document.getElementById("modeB");
+
+        if(which === "A"){
+          tabA.classList.add("active");
+          tabB.classList.remove("active");
+          modeA.style.display = "";
+          modeB.style.display = "none";
+        } else {
+          tabB.classList.add("active");
+          tabA.classList.remove("active");
+          modeB.style.display = "";
+          modeA.style.display = "none";
+        }
+      }
+
+      document.getElementById("tabA").addEventListener("click", () => setTab("A"));
+      document.getElementById("tabB").addEventListener("click", () => setTab("B"));
+
+      // Init
+      renderA();
+      renderB();
+    })();
+  </script>
+</body>
+</html>
