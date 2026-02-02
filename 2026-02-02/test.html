@@ -211,56 +211,127 @@
         return { blanked, correct: item.word, options };
       }
 
-      // MODE A
-      let aIdx = 0;
-      let aCorrect = 0;
-      let aTotal = W.words.length;
+    // MODE A
+let aIdx = 0;
+let aCorrect = 0;
+let aTotal = W.words.length;
 
-      function renderA(){
-        const q = buildSentenceQuestion(aIdx);
-        document.getElementById("aProgress").textContent = `A: ${aIdx + 1} of ${aTotal}`;
-        document.getElementById("aSentence").innerHTML = q.blanked.replace("_________", '<span class="blank">_____</span>');
+// prevents double-scoring if a kid taps multiple times fast
+let aLocked = false;
+let aAdvanceTimer = null;
 
-        const bank = document.getElementById("aBank");
-        bank.innerHTML = "";
-        q.options.forEach(opt => {
-          const pill = document.createElement("div");
-          pill.className = "pill";
-          pill.textContent = opt;
-          pill.addEventListener("click", () => {
-            // lock after selection
-            [...bank.children].forEach(el => el.style.pointerEvents = "none");
-            if(opt === q.correct){
-              pill.classList.add("correct");
-              aCorrect++;
-            } else {
-              pill.classList.add("wrong");
-              // show the correct one
-              [...bank.children].forEach(el => {
-                if(el.textContent === q.correct) el.classList.add("correct");
-              });
-            }
-            document.getElementById("aScore").textContent = `Score: ${aCorrect} / ${aTotal}`;
-          });
-          bank.appendChild(pill);
+function goToModeB(){
+  // Start Mode B fresh
+  bIdx = 0;
+  renderB();
+  setTab("B");
+}
+
+function advanceA(){
+  if (aAdvanceTimer) {
+    clearTimeout(aAdvanceTimer);
+    aAdvanceTimer = null;
+  }
+  aLocked = false;
+
+  // If we were on the last question, move to Mode B
+  if (aIdx >= aTotal - 1) {
+    goToModeB();
+    return;
+  }
+
+  aIdx++;
+  renderA();
+}
+
+function renderA(){
+  aLocked = false;
+  if (aAdvanceTimer) {
+    clearTimeout(aAdvanceTimer);
+    aAdvanceTimer = null;
+  }
+
+  const q = buildSentenceQuestion(aIdx);
+  document.getElementById("aProgress").textContent = `A: ${aIdx + 1} of ${aTotal}`;
+  document.getElementById("aSentence").innerHTML = q.blanked.replace("_________", '<span class="blank">_____</span>');
+
+  const bank = document.getElementById("aBank");
+  bank.innerHTML = "";
+
+  q.options.forEach(opt => {
+    const pill = document.createElement("div");
+    pill.className = "pill";
+    pill.textContent = opt;
+
+    pill.addEventListener("click", () => {
+      if (aLocked) return;
+      aLocked = true;
+
+      // lock after selection
+      [...bank.children].forEach(el => el.style.pointerEvents = "none");
+
+      if(opt === q.correct){
+        pill.classList.add("correct");
+        aCorrect++;
+      } else {
+        pill.classList.add("wrong");
+        // show the correct one
+        [...bank.children].forEach(el => {
+          if(el.textContent === q.correct) el.classList.add("correct");
         });
-
-        document.getElementById("aScore").textContent = `Score: ${aCorrect} / ${aTotal}`;
       }
 
-      document.getElementById("aPrev").addEventListener("click", () => {
-        aIdx = Math.max(0, aIdx - 1);
-        renderA();
-      });
-      document.getElementById("aNext").addEventListener("click", () => {
-        aIdx = Math.min(aTotal - 1, aIdx + 1);
-        renderA();
-      });
-      document.getElementById("aRestart").addEventListener("click", () => {
-        aIdx = 0;
-        aCorrect = 0;
-        renderA();
-      });
+      document.getElementById("aScore").textContent = `Score: ${aCorrect} / ${aTotal}`;
+
+      // auto-advance after a short delay
+      aAdvanceTimer = setTimeout(() => {
+        advanceA();
+      }, 600);
+    });
+
+    bank.appendChild(pill);
+  });
+
+  document.getElementById("aScore").textContent = `Score: ${aCorrect} / ${aTotal}`;
+}
+
+document.getElementById("aPrev").addEventListener("click", () => {
+  if (aAdvanceTimer) {
+    clearTimeout(aAdvanceTimer);
+    aAdvanceTimer = null;
+  }
+  aLocked = false;
+  aIdx = Math.max(0, aIdx - 1);
+  renderA();
+});
+
+document.getElementById("aNext").addEventListener("click", () => {
+  // Keep Next for adults debugging, but make it smart
+  if (aAdvanceTimer) {
+    clearTimeout(aAdvanceTimer);
+    aAdvanceTimer = null;
+  }
+  aLocked = false;
+
+  if (aIdx >= aTotal - 1) {
+    goToModeB();
+    return;
+  }
+
+  aIdx++;
+  renderA();
+});
+
+document.getElementById("aRestart").addEventListener("click", () => {
+  if (aAdvanceTimer) {
+    clearTimeout(aAdvanceTimer);
+    aAdvanceTimer = null;
+  }
+  aLocked = false;
+  aIdx = 0;
+  aCorrect = 0;
+  renderA();
+});
 
       // MODE B
       let bIdx = 0;
