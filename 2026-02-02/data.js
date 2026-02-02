@@ -1,7 +1,7 @@
 // kitimus/spelling/2026-02-02/data.js
 window.SPELLING_WEEK = {
   key: "2026-02-02",
-  label: "Spelling • Feb 2, 2026",
+  label: "February 2nd, 2026",
   words: [
     {
       word: "irreplaceable",
