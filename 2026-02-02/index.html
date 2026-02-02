@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Titan+One&display=swap" rel="stylesheet">
+<script src="./data.js"></script>
 
   <style>
     :root{
@@ -102,7 +103,7 @@
     <div class="top">
       <div>
         <div class="brand">Spelling</div>
-        <div class="sub">Week of 2026-02-02</div>
+       <div class="sub" id="weekLabel">Week</div>
       </div>
       <a class="backlink" href="/index.html">Back to KiTiMUS</a>
     </div>
@@ -123,5 +124,18 @@
       </div>
     </div>
   </div>
+  <script>
+  (function () {
+    const W = window.SPELLING_WEEK;
+    if (!W) return;
+
+    const labelEl = document.getElementById("weekLabel");
+    if (labelEl) labelEl.textContent = W.label || "Spelling";
+
+    // Optional: make the browser tab match too
+    document.title = `Spelling • ${W.label || W.key || ""}`.trim();
+  })();
+</script>
+
 </body>
 </html>
