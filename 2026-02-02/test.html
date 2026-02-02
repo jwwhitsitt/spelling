@@ -171,14 +171,18 @@
     .cornerMark{
       position:absolute;
       right:18px;
-      top:50%;
-      transform:translateY(-10%);
+    top:16px;
+right:16px;
+transform:none;
+
       font-size:64px;
       font-weight:1000;
       line-height:1;
       display:none;
       user-select:none;
       pointer-events:none;
+ 
+
     }
     .cornerMark.ok{ color: var(--good); display:block; }
     .cornerMark.bad{ color: var(--bad); display:block; }
@@ -638,7 +642,25 @@
       // ===== Tiles =====
       function buildTileState(word){
         const letters = word.toUpperCase().split("");
-        const tiles = shuffle(letters.map((ch, i) => ({ ch, id: i })));
+       const CAP = 18;
+
+// required letters (never remove these)
+const required = letters.slice();
+
+// build a decoy pool from other words in the week (letters only)
+const pool = shuffle(
+  WEEK.map(x => x.word.toUpperCase()).join("").replace(/[^A-Z]/g, "").split("")
+);
+
+// add decoys until we hit CAP (or until pool is exhausted)
+const tray = required.slice();
+for (let i = 0; i < pool.length && tray.length < CAP; i++) {
+  tray.push(pool[i]);
+}
+
+// now shuffle the full tray and assign ids
+const tiles = shuffle(tray.map((ch, i) => ({ ch, id: i })));
+
 
         // decoys: add duplicates and some letters from other words
         const doubles = ["R","L","P","C","T"];
@@ -837,6 +859,10 @@
 
         bar.style.width = "100%";
         barText.textContent = `${total} of ${total}`;
+
+        cornerMark.style.right = "16px";
+cornerMark.style.top = "16px";
+cornerMark.style.transform = "none";
 
         if(pct === 100){
           setTimeout(() => setKitimus("celebrate"), 200);
