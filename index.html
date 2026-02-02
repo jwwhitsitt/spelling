@@ -3,124 +3,59 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Spelling • 2026-02-02</title>
+  <title>Spelling</title>
 
-  <!-- Match your Kitimus font setup if you already use Titan One -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Titan+One&display=swap" rel="stylesheet">
 
   <style>
-    :root{
-      --bg:#0b1220;
-      --card:#111a2e;
-      --card2:#0f1730;
-      --text:#e9eefc;
-      --muted:#b9c3e6;
-      --accent:#2FAF9B;
-      --accent2:#2FA4E7;
-      --danger:#ff5a6a;
-      --ok:#35d07f;
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
-      --radius: 18px;
-    }
     body{
       margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: radial-gradient(1200px 600px at 50% -10%, rgba(47,175,155,.22), transparent 60%),
-                  radial-gradient(900px 500px at 10% 10%, rgba(47,164,231,.18), transparent 55%),
-                  var(--bg);
-      color:var(--text);
+      background:#0b1220;
+      color:#e9eefc;
     }
-    .wrap{ max-width: 980px; margin:0 auto; padding: 18px 16px 28px; }
-    .top{
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-      margin: 10px 0 16px;
-    }
+    .wrap{ max-width:900px; margin:0 auto; padding:20px; }
     .brand{
       font-family:"Titan One", system-ui, sans-serif;
-      letter-spacing:.5px;
-      font-size: 28px;
+      font-size:28px;
+      margin-bottom:10px;
     }
-    .sub{ color:var(--muted); font-size: 14px; margin-top:4px; }
-    .panel{
-      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: var(--radius);
-      padding: 18px;
-      box-shadow: var(--shadow);
-    }
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 14px;
+    .card{
+      background:#111a2e;
+      border-radius:18px;
+      padding:18px;
+      margin-top:14px;
+      box-shadow:0 10px 30px rgba(0,0,0,.35);
     }
     .btn{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      padding: 14px 14px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: linear-gradient(180deg, rgba(47,175,155,.22), rgba(17,26,46,.22));
-      color: var(--text);
+      display:block;
       text-decoration:none;
-      font-weight: 800;
-      box-shadow: 0 12px 30px rgba(0,0,0,.25);
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
+      color:#e9eefc;
+      background:rgba(47,175,155,.22);
+      border-radius:16px;
+      padding:16px;
+      font-weight:800;
+      text-align:center;
     }
-    .btn:active{ transform: scale(.99); }
-    .btn.secondary{
-      background: linear-gradient(180deg, rgba(47,164,231,.20), rgba(17,26,46,.22));
-    }
-    .smallrow{
-      display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px;
-      color: var(--muted); font-size: 13px;
-    }
-    .pill{
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.15);
-      border-radius: 999px;
-      padding: 6px 10px;
-    }
-    .backlink{
-      color: var(--muted);
-      text-decoration:none;
-      border:1px solid rgba(255,255,255,.10);
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(0,0,0,.12);
-      user-select:none;
+    .sub{
+      color:#b9c3e6;
+      font-size:14px;
+      margin-top:6px;
+      text-align:center;
     }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="top">
-      <div>
-        <div class="brand">Spelling</div>
-        <div class="sub">Week of 2026-02-02</div>
-      </div>
-      <a class="backlink" href="/index.html">Back to KiTiMUS</a>
-    </div>
+    <div class="brand">Spelling</div>
 
-    <div class="panel">
-      <div style="font-weight:800; font-size:18px;">Choose a mode</div>
-      <div class="sub">Study is spelling bee style. Test has two parts.</div>
-
-      <div class="grid">
-        <a class="btn" href="./study.html">Study</a>
-        <a class="btn secondary" href="./test.html">Test</a>
-      </div>
-
-      <div class="smallrow">
-        <div class="pill">No typing</div>
-        <div class="pill">No autocorrect</div>
-        <div class="pill">Two test styles</div>
-      </div>
+    <div class="card">
+      <a class="btn" href="./2026-02-02/index.html">
+        February 2nd
+      </a>
+      <div class="sub">Current week</div>
     </div>
   </div>
 </body>
