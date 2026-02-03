@@ -66,12 +66,14 @@
       align-items:center;
       gap:10px;
     }
-    header a{
+    header a, header button{
       text-decoration:none;
       color:var(--link);
       font-weight:900;
       white-space:nowrap;
     }
+    header button{ background:none; border:0; padding:0; font:inherit; color:inherit; }
+
     header h1{
       margin:0;
       font-size:16px;
@@ -381,10 +383,10 @@
 </head>
 
 <body>
-  <header>
-    <a href="./index.html">← Week</a>
+  <header class="topbar">
+    <button class="navlink" id="backBtn" type="button">← Back</button>
     <h1>Check Your Learning</h1>
-    <a href="/index.html" class="spacer" style="text-align:right;">KiTiMUS</a>
+    <a class="navlink" id="homeLink" href="https://kitimus.com/">Home</a>
   </header>
 
   <main>
@@ -877,5 +879,25 @@
       renderQuestion();
     })();
   </script>
+
+  <script>
+  (function(){
+    const HOME_URL = "https://kitimus.com/";
+    const backBtn = document.getElementById("backBtn");
+    const homeLink = document.getElementById("homeLink");
+    if(homeLink) homeLink.href = HOME_URL;
+
+    if(backBtn){
+      backBtn.addEventListener("click", () => {
+        if(document.referrer){
+          history.back();
+        } else {
+          window.location.href = HOME_URL;
+        }
+      });
+    }
+  })();
+  </script>
+
 </body>
 </html>
